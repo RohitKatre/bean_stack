@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t rkatre/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run rkatre/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t rkatre/multi-client ./client
+  - docker build -t rkatre/multi-nginx ./nginx
+  - docker build -t rkatre/multi-server ./server
+  - docker build -t rkatre/multi-worker ./worker
+  # login to docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # push images to docker hub
+  - docker push rkatre/multi-client
+  - docker push rkatre/multi-server
+  - docker push rkatre/multi-nginx
+  - docker push rkatre/multi-worker
