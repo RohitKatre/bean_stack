@@ -11,8 +11,8 @@ script:
 after_success:
   - docker build -t rkatre/multi-client ./client
   - docker build -t rkatre/multi-nginx ./nginx
-  - docker build -f Dockerfile.dev -t rkatre/multi-server ./server
-  - docker build -f Dockerfile.dev -t rkatre/multi-worker ./worker
+  - docker build -f ./server/Dockerfile.dev -t rkatre/multi-server ./server
+  - docker build -f ./worker/Dockerfile.dev -t rkatre/multi-worker ./worker
   # login to docker hub
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # push images to docker hub
